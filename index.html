@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>API Reference</title>
+    <title>RBA Android Documentation</title>
 
     <style>
       .highlight table td { padding: 5px; }
@@ -201,7 +201,7 @@
       <script src="javascripts/all.js"></script>
   </head>
 
-  <body class="index" data-languages="[&quot;shell&quot;,&quot;ruby&quot;,&quot;python&quot;,&quot;javascript&quot;]">
+  <body class="index" data-languages="[&quot;java&quot;]">
     <a href="#" id="nav-button">
       <span>
         NAV
@@ -209,12 +209,9 @@
       </span>
     </a>
     <div class="toc-wrapper">
-      <img src="images/logo.png" class="logo" alt="Logo" />
+      <img src="images/logo.svg" class="logo" sytle="margin: 22px; width: 80%;" alt="Logo" />
         <div class="lang-selector">
-              <a href="#" data-language-name="shell">shell</a>
-              <a href="#" data-language-name="ruby">ruby</a>
-              <a href="#" data-language-name="python">python</a>
-              <a href="#" data-language-name="javascript">javascript</a>
+              <a href="#" data-language-name="java">java</a>
         </div>
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
@@ -225,21 +222,35 @@
             <a href="#introduction" class="toc-h1 toc-link" data-title="Introduction">Introduction</a>
           </li>
           <li>
-            <a href="#authentication" class="toc-h1 toc-link" data-title="Authentication">Authentication</a>
-          </li>
-          <li>
-            <a href="#kittens" class="toc-h1 toc-link" data-title="Kittens">Kittens</a>
+            <a href="#implentation-details" class="toc-h1 toc-link" data-title="Implentation Details">Implentation Details</a>
               <ul class="toc-list-h2">
                   <li>
-                    <a href="#get-all-kittens" class="toc-h2 toc-link" data-title="Kittens">Get All Kittens</a>
-                  </li>
-                  <li>
-                    <a href="#get-a-specific-kitten" class="toc-h2 toc-link" data-title="Kittens">Get a Specific Kitten</a>
-                  </li>
-                  <li>
-                    <a href="#delete-a-specific-kitten" class="toc-h2 toc-link" data-title="Kittens">Delete a Specific Kitten</a>
+                    <a href="#configuration-properties" class="toc-h2 toc-link" data-title="Implentation Details">Configuration Properties</a>
                   </li>
               </ul>
+          </li>
+          <li>
+            <a href="#policy" class="toc-h1 toc-link" data-title="Policy">Policy</a>
+          </li>
+          <li>
+            <a href="#enroll" class="toc-h1 toc-link" data-title="Enroll">Enroll</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#automated-enrollment" class="toc-h2 toc-link" data-title="Enroll">Automated Enrollment</a>
+                  </li>
+                  <li>
+                    <a href="#manual-enrollment" class="toc-h2 toc-link" data-title="Enroll">Manual Enrollment</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#authenticate" class="toc-h1 toc-link" data-title="Authenticate">Authenticate</a>
+          </li>
+          <li>
+            <a href="#unenroll" class="toc-h1 toc-link" data-title="Unenroll">Unenroll</a>
+          </li>
+          <li>
+            <a href="#certificates" class="toc-h1 toc-link" data-title="Certificates">Certificates</a>
           </li>
           <li>
             <a href="#errors" class="toc-h1 toc-link" data-title="Errors">Errors</a>
@@ -254,184 +265,229 @@
       <div class="dark-box"></div>
       <div class="content">
         <h1 id='introduction'>Introduction</h1>
-<p>Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.</p>
-
-<p>We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.</p>
-
-<p>This example API documentation page was created with <a href="https://github.com/tripit/slate">Slate</a>. Feel free to edit it and use it as a base for your own API&#39;s documentation.</p>
-<h1 id='authentication'>Authentication</h1>
+<p>This document will cover how the Android RBA SDK can be implemented into a native Android app. The first section will cover some details on how Android specifically handles all of the methods which can be invoked. Subsequent sections will go over how to invoke the policy, enroll, authenticate and unenroll calls.</p>
+<h1 id='implentation-details'>Implentation Details</h1>
 <blockquote>
-<p>To authorize, use this code:</p>
+<p>Example of the AetnaNGAAuth Class</p>
 </blockquote>
-<pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre><pre class="highlight shell tab-shell"><code><span class="c"># With shell, you can just pass the correct header with each request</span>
-curl <span class="s2">"api_endpoint_here"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre><pre class="highlight javascript tab-javascript"><code><span class="kr">const</span> <span class="nx">kittn</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'kittn'</span><span class="p">);</span>
-
-<span class="kd">let</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">kittn</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">);</span>
+<pre class="highlight java tab-java"><code><span class="n">AetnaNGAAuth</span> <span class="n">sAetnaNGAAuth</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+<span class="k">try</span> <span class="o">{</span>
+  <span class="n">sAetnaNGAAuth</span> <span class="o">=</span> <span class="n">AetnaNGAAuth</span><span class="o">.</span><span class="na">getInstance</span><span class="o">();</span>
+<span class="o">}</span> <span class="k">catch</span><span class="o">(</span><span class="n">UserNotFoundException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+  <span class="c1">//user was not found</span>
+<span class="o">}</span>
 </code></pre>
+<p>This section will cover some of the classes used across all of the SDK methods, as well as some general information about how these methods are to be set up and called.</p>
+
+<p>All of the SDK’s methods are invoked from the AetnaNGAAuth class. This is a static singleton class which is responsible for coordinating all the major RBA operations, keeping references to all of the authenticators available to the device, and keeping track of the state of the user with respect to the RBA flow. A reference to this class can be set with the following code:</p>
+
 <blockquote>
-<p>Make sure to replace <code>meowmeowmeow</code> with your API key.</p>
+<p>Use this pattern to make asynchronous API call</p>
 </blockquote>
+<pre class="highlight java tab-java"><code><span class="n">Subject</span><span class="o">&lt;</span><span class="n">T</span><span class="o">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="n">observer</span> <span class="o">=</span> <span class="n">PublishSubject</span><span class="o">.</span><span class="na">create</span><span class="o">();</span>
+<span class="n">observer</span><span class="o">.</span><span class="na">subscribeOn</span><span class="o">(</span><span class="n">Schedulers</span><span class="o">.</span><span class="na">newThread</span><span class="o">())</span>
+<span class="o">.</span><span class="na">observeOn</span><span class="o">(</span><span class="n">AndroidSchedulers</span><span class="o">.</span><span class="na">mainThread</span><span class="o">())</span>
+<span class="o">.</span><span class="na">subscribe</span><span class="o">((</span><span class="n">T</span> <span class="n">result</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
+  <span class="c1">//call is done</span>
+<span class="o">});</span>
+</code></pre>
+<p>As a note, you’ll have to save a username to shared preferences with the key “NGAUser”, otherwise the getInstance method will throw a UserNotFoundException. It can be an actual username or a random string, it just can’t be empty.</p>
 
-<p>Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our <a href="http://example.com/developers">developer portal</a>.</p>
+<p>Most of the methods which can be invoked involve making an asynchronous API call. The RxJava observer-subscriber implementation is used to handle this. For each of the asynchronous method calls, an observer is created, subscribed on, and passed into the method. Specific examples will be given in the appropriate sections, but they will all use the following pattern:</p>
+<pre class="highlight java tab-java"><code><span class="n">subscribe</span><span class="o">(</span><span class="k">new</span> <span class="n">Subscriber</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;()</span> <span class="o">{</span>
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onCompleted</span><span class="o">()</span> <span class="o">{}</span>
 
-<p>Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:</p>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onError</span><span class="o">(</span><span class="n">Throwable</span> <span class="n">e</span><span class="o">)</span> <span class="o">{}</span>
 
-<p><code>Authorization: meowmeowmeow</code></p>
+      <span class="nd">@Override</span>
+      <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onNext</span><span class="o">(</span><span class="n">T</span> <span class="n">result</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">//call is done</span>
+      <span class="o">}</span>
+    <span class="o">});</span>
+</code></pre>
+<p>You may need to import the RetroLambda library to use the (T result) -&gt; {} syntax shown. If you’re not using RetroLambda, the following syntax can be used:</p>
 
-<aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
+<p>In the assets folder of your project, you’ll need to add a file called configuration.properties. This contains some values which need to be configured from the app level such that the SDK can make the appropriate API calls. The fields which need to be added are as follows:</p>
+<h3 id='configuration-properties'>Configuration Properties</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>BASE_API_URL</td>
+<td>https://nga.acceptto.com -- base url of the server you’re pointing to</td>
+</tr>
+<tr>
+<td>NGA_REQUESTS_TOKEN</td>
+<td>api/v1/user/mock/app_token -- token endpoint for the server</td>
+</tr>
+<tr>
+<td>NGA_REQUESTS_POLICY</td>
+<td>api/v1/policy -- policy endpoint for the server</td>
+</tr>
+<tr>
+<td>NGA_REQUESTS_LOA</td>
+<td>rbaorcheng/v1/scopetoloa -- policy endpoint for the server</td>
+</tr>
+<tr>
+<td>NGA_REQUESTS_ENROLL</td>
+<td>api/v1/requests/enroll -- enroll endpoint for the server</td>
+</tr>
+<tr>
+<td>NGA_REQUESTS_AUTHENTICATE</td>
+<td>api/v1/requests/authenticate -- auth endpoint for the server</td>
+</tr>
+<tr>
+<td>NGA_REQUESTS_UNENROLL</td>
+<td>api/v1/requests/unenroll -- unenroll endpoint for the server</td>
+</tr>
+<tr>
+<td>CLIENT_UID</td>
+<td>1767d8cf-ce5d-414f-b0ba-d680aeb79920 -- client uid used to retrieve access tokens</td>
+</tr>
+<tr>
+<td>CLIENT_SECRET</td>
+<td>2tW3xQ7iM0rW6qY3wQ6tF1gW8kN1nO3rV5qL1dK2iQ0kI8sT1 -- client secret used to retrieve access tokens</td>
+</tr>
+<tr>
+<td>SDK_VERSION</td>
+<td>1.0 -- SDK version which is sent in all operation requests</td>
+</tr>
+<tr>
+<td>APIC_GRANT_TYPE</td>
+<td>client_credentials -- APIC grant type used to retrieve access tokens</td>
+</tr>
+<tr>
+<td>APIC_SCOPE</td>
+<td>Public%20NonPII -- APIC scope used to retrieve access tokens</td>
+</tr>
+<tr>
+<td>RBA_APP_ID</td>
+<td>com.acceptto.androidngasample -- AppId sent in all operation requests</td>
+</tr>
+<tr>
+<td>RBA_APP_VERSION</td>
+<td>1.0 -- AppVersion sent in all operation requests</td>
+</tr>
+</tbody></table>
+
+<p>Finally, before trying to use the SDK, you will need to specify your application context. The SDK comes with an ApplicationContextProvider class which can help you achieve this:</p>
+<pre class="highlight java tab-java"><code><span class="n">ApplicationContextProvider</span><span class="o">.</span><span class="na">setContext</span><span class="o">(</span><span class="n">getApplicationContext</span><span class="o">());</span>
+</code></pre>
+<p>You will need to do this before invoking any of the SDK methods.</p>
+<h1 id='policy'>Policy</h1><pre class="highlight java tab-java"><code><span class="n">sAetnaNGAAuth</span><span class="o">.</span><span class="na">setTrustMode</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
+</code></pre>
+<p>There are a couple steps involved in making a good policy call. Firstly, depending on whether or not you plan to use trusted enroll, you’ll want to call the AetnaNGAAuth setTrustMode method, passing in either true or false:</p>
+<pre class="highlight java tab-java"><code><span class="n">Subject</span><span class="o">&lt;</span><span class="n">RBAEnrollState</span><span class="o">,</span> <span class="n">RBAEnrollState</span><span class="o">&gt;</span> <span class="n">stateObserver</span> <span class="o">=</span> <span class="n">PublishSubject</span><span class="o">.</span><span class="na">create</span><span class="o">();</span>
+<span class="n">stateObserver</span><span class="o">.</span><span class="na">subscribeOn</span><span class="o">(</span><span class="n">Schedulers</span><span class="o">.</span><span class="na">newThread</span><span class="o">())</span>
+    <span class="o">.</span><span class="na">observeOn</span><span class="o">(</span><span class="n">AndroidSchedulers</span><span class="o">.</span><span class="na">mainThread</span><span class="o">())</span>
+    <span class="o">.</span><span class="na">subscribe</span><span class="o">((</span><span class="n">RBAEnrollState</span> <span class="n">isRBAEnrolled</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">isRBAEnrolled</span> <span class="o">==</span> <span class="n">RBAEnrollState</span><span class="o">.</span><span class="na">FINAL</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">//user is enrolled</span>
+<span class="o">}</span> <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">isRBAEnrolled</span> <span class="o">==</span> <span class="n">RBAEnrollState</span><span class="o">.</span><span class="na">TRANSIENT</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">//user is not enrolled</span>
+<span class="o">}</span>
+<span class="o">});</span>
+</code></pre>
+<p>After that you’ll need to set up and subscribe on your observer, which will return an RBAEnrollState object once it’s finished making the call:</p>
+<pre class="highlight java tab-java"><code><span class="n">sAetnaNGAAuth</span><span class="o">.</span><span class="na">isNGAEnrolledWithCompletion</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">stateObserver</span><span class="o">);</span>
+</code></pre>
+<p>Finally, invoke the isNGAEnrolledWithCompletion method on AetnaNGAAuth, passing in the calling activity context and your observer:</p>
+<h1 id='enroll'>Enroll</h1>
+<p>There are two ways to handle the enrollment operation in the SDK. First, NGA provides an automated flow which guides the user through the process of setting up new authentication methods. It invokes a series of activities, in order to explain to the user what NGA is and how to use it. All the text and coloring on these activities is configurable, which is documented in the Configuration section. It should be noted that if using this method of enrollment, the current setup is such that enabling PIN authentication is mandatory, while Fingerprint is optional. It is also possible to handle the enrollment process manually, which provides more flexibility on which authenticators to allow the user to enroll with. This way of enrolling also introduces more pitfalls however, all of which will be covered in this spec.</p>
+<h2 id='automated-enrollment'>Automated Enrollment</h2><pre class="highlight java tab-java"><code><span class="n">sAetnaNGAAuth</span><span class="o">.</span><span class="na">startEnrollFlow</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="mi">9001</span><span class="o">);</span>
+</code></pre>
+<p>Unlike the other operations, NGA automated enrollment invokes a series of activities in order to walk the user through the enrollment process, as opposed to simply running some logic in the background. Because of this, rather than using observers to listen for the result of the operation, enroll relies on the onActivityResult lifecycle method. Once the user either completes or errors/cancels out of the enroll process, the SDK activities finish with a result code indicating whether or not the operation was successful.</p>
+
+<p>To start the enrollment process, the SDK uses the built in method startEnrollFlow. It’s given a context and a request code to be used on onActivityResult:</p>
+<pre class="highlight java tab-java"><code><span class="nd">@Override</span>
+<span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onActivityResult</span><span class="o">(</span><span class="kt">int</span> <span class="n">requestCode</span><span class="o">,</span> <span class="kt">int</span> <span class="n">resultCode</span><span class="o">,</span> <span class="n">Intent</span> <span class="n">data</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">requestCode</span> <span class="o">==</span> <span class="mi">9001</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">resultCode</span> <span class="o">==</span> <span class="n">Activity</span><span class="o">.</span><span class="na">RESULT_OK</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">//enroll was successful</span>
+<span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+    <span class="c1">//enroll was not successful</span>
+<span class="o">}</span>
+<span class="o">}</span>
+<span class="o">}</span>
+</code></pre>
+<p>The first parameter needs to be the Activity which invokes enroll in the first place. The second parameter is a request code which the SDK will use when invoking its own activities. This request code has to be the same one used on your onActivityResult method. Here’s an example of how to implement this:</p>
+
+<p>The important pieces here are the request code and result code. The request code needs to match what you passed into the startEnrollFlow method. You also need to make sure you’re filtering it, otherwise you may see some unexpected behavior from some of the authenticators. The result code is set by the SDK to the value of Activity.RESULT_OK if enroll finishes successfully, so you’ll want to filter there as well.</p>
+<h2 id='manual-enrollment'>Manual Enrollment</h2><pre class="highlight java tab-java"><code><span class="n">RBAAuthenticationType</span> <span class="n">deviceRisk</span> <span class="o">=</span> <span class="n">NGAUtil</span><span class="o">.</span><span class="na">getRBATypeFromFriendlyName</span><span class="o">(</span><span class="n">NGAConstants</span><span class="o">.</span><span class="na">ACCEPTTO_DEVICE_RISK</span><span class="o">);</span>
+<span class="n">Subject</span><span class="o">&lt;</span><span class="n">RBAEnrollState</span><span class="o">,</span> <span class="n">RBAEnrollState</span><span class="o">&gt;</span> <span class="n">deviceRiskObserver</span> <span class="o">=</span> <span class="n">PublishSubject</span><span class="o">.</span><span class="na">create</span><span class="o">();</span>
+        <span class="n">deviceRiskObserver</span><span class="o">.</span><span class="na">subscribeOn</span><span class="o">(</span><span class="n">Schedulers</span><span class="o">.</span><span class="na">newThread</span><span class="o">())</span>
+                <span class="o">.</span><span class="na">observeOn</span><span class="o">(</span><span class="n">AndroidSchedulers</span><span class="o">.</span><span class="na">mainThread</span><span class="o">())</span>
+                <span class="o">.</span><span class="na">subscribe</span><span class="o">((</span><span class="n">RBAEnrollState</span> <span class="n">deviceEnrollState</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
+                    <span class="k">if</span><span class="o">(</span><span class="n">deviceEnrollState</span> <span class="o">==</span> <span class="n">RBAEnrollState</span><span class="o">.</span><span class="na">FINAL</span><span class="o">)</span> <span class="o">{</span>
+
+
+                       <span class="c1">//Enrollment successful</span>
+                    <span class="o">}</span> <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">deviceEnrollState</span> <span class="o">==</span> <span class="n">RBAEnrollState</span><span class="o">.</span><span class="na">ERROR</span><span class="o">)</span> <span class="o">{</span>
+                       <span class="c1">//Enrollment errored</span>
+                    <span class="o">}</span> <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">deviceEnrollState</span> <span class="o">==</span> <span class="n">RBAEnrollState</span><span class="o">.</span><span class="na">CANCEL</span><span class="o">)</span> <span class="o">{</span>
+                       <span class="c1">//Enrollment canceled</span>
+                    <span class="o">}</span>
+                <span class="o">},</span> <span class="nl">Timber:</span><span class="o">:</span><span class="n">e</span><span class="o">);</span>
+        <span class="n">sAetnaNGAAuth</span><span class="o">.</span><span class="na">enrollNGAWithCompletion</span><span class="o">(</span><span class="n">mActivity</span><span class="o">,</span> <span class="n">deviceRisk</span><span class="o">,</span> <span class="n">deviceRiskObserver</span><span class="o">);</span>
+</code></pre>
+<p>If you’d like to display your own screens or dictate the rules of enrollment yourself, it is possible to invoke the SDK’s enrollment operation manually. This is done by using observers, similar to the other operations:</p>
+
+<aside class="warning">
+It should be noted that if you are using manual enrollment, there are two practices which, if not followed properly, could lead to unexpected behavior in your application.
 </aside>
-<h1 id='kittens'>Kittens</h1><h2 id='get-all-kittens'>Get All Kittens</h2><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
 
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span>
-</code></pre><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</code></pre><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://example.com/api/kittens"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre><pre class="highlight javascript tab-javascript"><code><span class="kr">const</span> <span class="nx">kittn</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'kittn'</span><span class="p">);</span>
-
-<span class="kd">let</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">kittn</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">);</span>
-<span class="kd">let</span> <span class="nx">kittens</span> <span class="o">=</span> <span class="nx">api</span><span class="p">.</span><span class="nx">kittens</span><span class="p">.</span><span class="nx">get</span><span class="p">();</span>
+<p>Firstly, you must enroll device risk before enrolling any other authenticators. If you skip this step, policy will return incorrect response codes in future operations. Secondly, you should be sure the authenticator you are trying to enroll with is supported on the device. The static method findOpFromName, belonging to the AetnaNGAAuth class will return the correct NGAOperation instance if the authenticator is supported and null if not, and as such it should be called before attempting to enroll your authenticator.</p>
+<h1 id='authenticate'>Authenticate</h1><pre class="highlight java tab-java"><code><span class="n">Subject</span><span class="o">&lt;</span><span class="n">RBAAuthenticationState</span><span class="o">,</span> <span class="n">RBAAuthenticationState</span><span class="o">&gt;</span> <span class="n">stateObserver</span> <span class="o">=</span> <span class="n">PublishSubject</span><span class="o">.</span><span class="na">create</span><span class="o">();</span>
+<span class="n">stateObserver</span><span class="o">.</span><span class="na">subscribeOn</span><span class="o">(</span><span class="n">Schedulers</span><span class="o">.</span><span class="na">newThread</span><span class="o">())</span>
+    <span class="o">.</span><span class="na">observerOn</span><span class="o">(</span><span class="n">AndroidSchedulers</span><span class="o">.</span><span class="na">mainThread</span><span class="o">())</span>
+    <span class="o">.</span><span class="na">subscribe</span><span class="o">((</span><span class="n">RBAAuthenticationState</span> <span class="n">rbaAuthenticationState</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">rbaAuthenticationState</span> <span class="o">==</span> <span class="n">RBAAuthenticationState</span><span class="o">.</span><span class="na">FINAL</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">//auth successful</span>
+<span class="o">}</span> <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">rbaAuthenticationState</span> <span class="o">==</span> <span class="n">RBAAuthenticationState</span><span class="o">.</span><span class="na">CANCEL</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">//user canceled auth flow</span>
+<span class="o">}</span> <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">rbaAuthenticationState</span> <span class="o">==</span> <span class="n">RBAAuthenticationState</span><span class="o">.</span><span class="na">ERROR</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">//auth flow error</span>
+<span class="o">}</span>
+<span class="o">});</span>
 </code></pre>
-<blockquote>
-<p>The above command returns JSON structured like this:</p>
-</blockquote>
-<pre class="highlight json tab-json"><code><span class="p">[</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fluffums"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"calico"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">]</span><span class="w">
-</span></code></pre>
-<p>This endpoint retrieves all kittens.</p>
-<h3 id='http-request'>HTTP Request</h3>
-<p><code>GET http://example.com/api/kittens</code></p>
-<h3 id='query-parameters'>Query Parameters</h3>
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>include_cats</td>
-<td>false</td>
-<td>If set to true, the result will also include cats.</td>
-</tr>
-<tr>
-<td>available</td>
-<td>true</td>
-<td>If set to false, the result will include kittens that have already been adopted.</td>
-</tr>
-</tbody></table>
-
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
-<h2 id='get-a-specific-kitten'>Get a Specific Kitten</h2><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://example.com/api/kittens/2"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre><pre class="highlight javascript tab-javascript"><code><span class="kr">const</span> <span class="nx">kittn</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'kittn'</span><span class="p">);</span>
-
-<span class="kd">let</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">kittn</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">);</span>
-<span class="kd">let</span> <span class="nx">max</span> <span class="o">=</span> <span class="nx">api</span><span class="p">.</span><span class="nx">kittens</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<p>Both authenticate and unenroll work very similarly to policy, each with just a few minor tweaks. For authenticate specifically, there are only two differences from policy; first is the value which is being returned in the subscriber’s onNext method. This is best shown with a code sample:</p>
+<pre class="highlight java tab-java"><code><span class="n">sAetnaNGAAuth</span><span class="o">.</span><span class="na">authenticateNGA</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="n">stateObserver</span><span class="o">);</span>
 </code></pre>
-<blockquote>
-<p>The above command returns JSON structured like this:</p>
-</blockquote>
-<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<p>This endpoint retrieves a specific kitten.</p>
-
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
-<h3 id='http-request-2'>HTTP Request</h3>
-<p><code>GET http://example.com/kittens/&lt;ID&gt;</code></p>
-<h3 id='url-parameters'>URL Parameters</h3>
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>ID</td>
-<td>The ID of the kitten to retrieve</td>
-</tr>
-</tbody></table>
-<h2 id='delete-a-specific-kitten'>Delete a Specific Kitten</h2><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">delete</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://example.com/api/kittens/2"</span>
-  -X DELETE
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre><pre class="highlight javascript tab-javascript"><code><span class="kr">const</span> <span class="nx">kittn</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'kittn'</span><span class="p">);</span>
-
-<span class="kd">let</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">kittn</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">);</span>
-<span class="kd">let</span> <span class="nx">max</span> <span class="o">=</span> <span class="nx">api</span><span class="p">.</span><span class="nx">kittens</span><span class="p">.</span><span class="k">delete</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<p>The authenticate flow can either succeed, fail, or be canceled by the user, and will return an appropriate result code to allow for the app to handle each case. When invoking the authenticate method, in addition to the state observer and activity context, an argument representing the LOA must be passed in. At the time of writing, this value is always 2:</p>
+<pre class="highlight java tab-java"><code><span class="nd">@Override</span>
+<span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onActivityResult</span><span class="o">(</span><span class="kt">int</span> <span class="n">requestCode</span><span class="o">,</span> <span class="kt">int</span> <span class="n">resultCode</span><span class="o">,</span> <span class="n">Intent</span> <span class="n">data</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">sAetnaNGAAuth</span><span class="o">.</span><span class="na">getCurrentOp</span><span class="o">().</span><span class="na">passIntentData</span><span class="o">(</span><span class="n">requestCode</span><span class="o">,</span> <span class="n">resultCode</span><span class="o">,</span>
+<span class="n">data</span><span class="o">,</span> <span class="k">this</span><span class="o">);</span>
+<span class="o">}</span>
 </code></pre>
-<blockquote>
-<p>The above command returns JSON structured like this:</p>
-</blockquote>
-<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"deleted"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">":("</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<p>This endpoint retrieves a specific kitten.</p>
-<h3 id='http-request-3'>HTTP Request</h3>
-<p><code>DELETE http://example.com/kittens/&lt;ID&gt;</code></p>
-<h3 id='url-parameters-2'>URL Parameters</h3>
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>ID</td>
-<td>The ID of the kitten to delete</td>
-</tr>
-</tbody></table>
+<p>Finally, any FIDO certified authenticators (and possibly others in the future) will need to use the onActivityResult method to successfully complete the authentication flow. This can be achieved by making the following method call:</p>
+
+<p>You’ll want to be sure to put this in a branch such that it will not be triggered during the enroll flow. The request codes of the various authenticators will likely change over the course of time, and hence are out of the scope of this document. However, placing this line of code in an else statement should work just fine.</p>
+<h1 id='unenroll'>Unenroll</h1><pre class="highlight java tab-java"><code><span class="n">Subject</span><span class="o">&lt;</span><span class="n">RBAUnEnrollState</span><span class="o">,</span> <span class="n">RBAUnEnrollState</span><span class="o">&gt;</span> <span class="n">stateObserver</span> <span class="o">=</span> <span class="n">PublishSubject</span><span class="o">.</span><span class="na">create</span><span class="o">();</span>
+<span class="n">stateObserver</span><span class="o">.</span><span class="na">subscribeOn</span><span class="o">(</span><span class="n">Schedulers</span><span class="o">.</span><span class="na">newThread</span><span class="o">())</span>
+    <span class="o">.</span><span class="na">observeOn</span><span class="o">(</span><span class="n">AndroidSchedulers</span><span class="o">.</span><span class="na">mainThread</span><span class="o">())</span>
+    <span class="o">.</span><span class="na">subscribe</span><span class="o">((</span><span class="n">RBAUnEnrollState</span> <span class="n">rbaUnenrollState</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">rbaUnenrollState</span> <span class="o">==</span> <span class="n">RBAUnEnrollState</span><span class="o">.</span><span class="na">FINAL</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">//unenroll successful</span>
+<span class="o">}</span> <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">rbaUnenrollState</span> <span class="o">==</span> <span class="n">RBAUnEnrollState</span><span class="o">.</span><span class="na">ERROR</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">//unenroll failed</span>
+<span class="o">}</span>
+<span class="o">});</span>
+<span class="n">sAetnaNGAAuth</span><span class="o">.</span><span class="na">unenrollNGAWithCompletion</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">stateObserver</span><span class="o">);</span>
+</code></pre>
+<p>The unenroll flow is pretty much the same as authenticate. The only differences are that it uses RBAUnEnrollState to indicate whether the flow was successful or not, there is no cancel state, and no LOA parameter is required to invoke the method. A proper implementation is as follows:</p>
+
+<p>Some authenticators also use onActivityResult for the unenroll flow, but the implementation is exactly the same as was described in the authenticate section (4). As long as you have that same code it should work just fine.</p>
+<h1 id='certificates'>Certificates</h1>
+<p>RBAAuthSDK performs several sign/verify operations during the creation of server requests, and for that reason we need to add the correct keys on the app level. The name for those keys should be the following:
+* Nga_core_id_rsa_pub.pem (server public key)
+* App_id_rsa_priv.pem (app private key)
+Keys must be added on the project for all the needed targets. Please make sure they are included in the assets folder.</p>
 <h1 id='errors'>Errors</h1>
 <aside class="notice">This error section is stored in a separate file in `includes/_errors.md`. Slate allows you to optionally separate out your docs into many files...just save them to the `includes` folder and add them to the top of your `index.md`'s frontmatter. Files are included in the order listed.</aside>
 
@@ -445,35 +501,35 @@ Remember — a happy kitten is an authenticated kitten!
 </thead><tbody>
 <tr>
 <td>400</td>
-<td>Bad Request -- Your request sucks</td>
+<td>Bad Request -- Your request sucks.</td>
 </tr>
 <tr>
 <td>401</td>
-<td>Unauthorized -- Your API key is wrong</td>
+<td>Unauthorized -- Your API key is wrong.</td>
 </tr>
 <tr>
 <td>403</td>
-<td>Forbidden -- The kitten requested is hidden for administrators only</td>
+<td>Forbidden -- The kitten requested is hidden for administrators only.</td>
 </tr>
 <tr>
 <td>404</td>
-<td>Not Found -- The specified kitten could not be found</td>
+<td>Not Found -- The specified kitten could not be found.</td>
 </tr>
 <tr>
 <td>405</td>
-<td>Method Not Allowed -- You tried to access a kitten with an invalid method</td>
+<td>Method Not Allowed -- You tried to access a kitten with an invalid method.</td>
 </tr>
 <tr>
 <td>406</td>
-<td>Not Acceptable -- You requested a format that isn&#39;t json</td>
+<td>Not Acceptable -- You requested a format that isn&#39;t json.</td>
 </tr>
 <tr>
 <td>410</td>
-<td>Gone -- The kitten requested has been removed from our servers</td>
+<td>Gone -- The kitten requested has been removed from our servers.</td>
 </tr>
 <tr>
 <td>418</td>
-<td>I&#39;m a teapot</td>
+<td>I&#39;m a teapot.</td>
 </tr>
 <tr>
 <td>429</td>
@@ -492,10 +548,7 @@ Remember — a happy kitten is an authenticated kitten!
       </div>
       <div class="dark-box">
           <div class="lang-selector">
-                <a href="#" data-language-name="shell">shell</a>
-                <a href="#" data-language-name="ruby">ruby</a>
-                <a href="#" data-language-name="python">python</a>
-                <a href="#" data-language-name="javascript">javascript</a>
+                <a href="#" data-language-name="java">java</a>
           </div>
       </div>
     </div>
