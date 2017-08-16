@@ -219,97 +219,102 @@
         <ul class="search-results"></ul>
       <div id="toc" class="toc-list-h1">
           <li>
-            <a href="#introduction" class="toc-h1 toc-link" data-title="Introduction">Introduction</a>
-          </li>
-          <li>
-            <a href="#implentation-details" class="toc-h1 toc-link" data-title="Implentation Details">Implentation Details</a>
+            <a href="#rba-android-documentation-v1-0" class="toc-h1 toc-link" data-title="RBA Android Documentation v1.0">RBA Android Documentation v1.0</a>
               <ul class="toc-list-h2">
                   <li>
-                    <a href="#configuration-properties" class="toc-h2 toc-link" data-title="Implentation Details">Configuration Properties</a>
-                  </li>
-              </ul>
-          </li>
-          <li>
-            <a href="#policy" class="toc-h1 toc-link" data-title="Policy">Policy</a>
-          </li>
-          <li>
-            <a href="#enroll" class="toc-h1 toc-link" data-title="Enroll">Enroll</a>
-              <ul class="toc-list-h2">
-                  <li>
-                    <a href="#automated-enrollment" class="toc-h2 toc-link" data-title="Enroll">Automated Enrollment</a>
+                    <a href="#setup-and-android-specific-implementation-details" class="toc-h2 toc-link" data-title="RBA Android Documentation v1.0">Setup and Android-Specific Implementation Details</a>
                   </li>
                   <li>
-                    <a href="#manual-enrollment" class="toc-h2 toc-link" data-title="Enroll">Manual Enrollment</a>
+                    <a href="#policy" class="toc-h2 toc-link" data-title="RBA Android Documentation v1.0">Policy</a>
+                  </li>
+                  <li>
+                    <a href="#enroll" class="toc-h2 toc-link" data-title="RBA Android Documentation v1.0">Enroll</a>
+                  </li>
+                  <li>
+                    <a href="#authenticate" class="toc-h2 toc-link" data-title="RBA Android Documentation v1.0">Authenticate</a>
+                  </li>
+                  <li>
+                    <a href="#unenroll" class="toc-h2 toc-link" data-title="RBA Android Documentation v1.0">Unenroll</a>
+                  </li>
+                  <li>
+                    <a href="#certificates" class="toc-h2 toc-link" data-title="RBA Android Documentation v1.0">Certificates</a>
                   </li>
               </ul>
-          </li>
-          <li>
-            <a href="#authenticate" class="toc-h1 toc-link" data-title="Authenticate">Authenticate</a>
-          </li>
-          <li>
-            <a href="#unenroll" class="toc-h1 toc-link" data-title="Unenroll">Unenroll</a>
-          </li>
-          <li>
-            <a href="#certificates" class="toc-h1 toc-link" data-title="Certificates">Certificates</a>
-          </li>
-          <li>
-            <a href="#errors" class="toc-h1 toc-link" data-title="Errors">Errors</a>
           </li>
       </div>
         <ul class="toc-footer">
-            <li><a href='#'>Sign Up for a Developer Key</a></li>
-            <li><a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a></li>
+            <li><a href='https://acceptto.com'>Acceptto's Homepage</a></li>
         </ul>
     </div>
     <div class="page-wrapper">
       <div class="dark-box"></div>
       <div class="content">
-        <h1 id='introduction'>Introduction</h1>
+        <h1 id='rba-android-documentation-v1-0'>RBA Android Documentation v1.0</h1>
 <p>This document will cover how the Android RBA SDK can be implemented into a native Android app. The first section will cover some details on how Android specifically handles all of the methods which can be invoked. Subsequent sections will go over how to invoke the policy, enroll, authenticate and unenroll calls.</p>
-<h1 id='implentation-details'>Implentation Details</h1>
+<h2 id='setup-and-android-specific-implementation-details'>Setup and Android-Specific Implementation Details</h2>
+<p>This section will cover how to set up a project to use the SDK, as well as some of the classes used across all of the SDK methods.</p>
+
+<p>First of all, it should be noted that the NGA SDK is only supported on devices which are running KitKat or higher. If your project’s minSDKVersion is lower than 19, you’ll need to any calls to NGA methods are not invoked unless the device is running KitKat or higher.</p>
+
+<p>You should have access to several apk folders which you’ll need to import the SDK libraries into your application. The names of these folders are as follows:</p>
+
+<ul>
+<li>eguardian-framework-x.x.x.aar</li>
+<li>HyprCommon-x.x.x.aar</li>
+<li>HyprFidoClient-x.x.x.aar</li>
+<li>HyprFingerprint-x.x.x.aar</li>
+<li>HyprPin-x.x.x.aar</li>
+<li>HyprRbaFramework-x.x.x.aar</li>
+<li>HyprUiAdapter-x.x.x.aar</li>
+<li>nga-auth-framework-x.x.x.aar</li>
+<li>rba-auth-interface-x.x.x.aar</li>
+</ul>
+
 <blockquote>
-<p>Example of the AetnaNGAAuth Class</p>
+<p>Add the following code to the repositories block in your build.gradle file</p>
 </blockquote>
-<pre class="highlight java tab-java"><code><span class="n">AetnaNGAAuth</span> <span class="n">sAetnaNGAAuth</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-<span class="k">try</span> <span class="o">{</span>
-  <span class="n">sAetnaNGAAuth</span> <span class="o">=</span> <span class="n">AetnaNGAAuth</span><span class="o">.</span><span class="na">getInstance</span><span class="o">();</span>
-<span class="o">}</span> <span class="k">catch</span><span class="o">(</span><span class="n">UserNotFoundException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-  <span class="c1">//user was not found</span>
-<span class="o">}</span>
+<pre class="highlight java tab-java"><code><span class="n">flatDir</span><span class="o">{</span>
+  <span class="n">dirs</span> <span class="err">'</span><span class="n">libs</span><span class="err">'</span>
+<span class="o">};</span>
 </code></pre>
-<p>This section will cover some of the classes used across all of the SDK methods, as well as some general information about how these methods are to be set up and called.</p>
+<p>These files should be placed in the libs folder, right under the root directory (so on the same level as the src folder). In order to read them in, you’ll need to add the following code to the repositories block in your build.gradle file:</p>
 
-<p>All of the SDK’s methods are invoked from the AetnaNGAAuth class. This is a static singleton class which is responsible for coordinating all the major RBA operations, keeping references to all of the authenticators available to the device, and keeping track of the state of the user with respect to the RBA flow. A reference to this class can be set with the following code:</p>
+<p>Now you should be able to import the libraries under the dependencies block. An example is given below:</p>
+
+<p><strong>//Acceptto dependencies</strong>
+compile(name: &#39;eguardian-framework-1.09&#39;, ext: &#39;aar&#39;)
+compile(name: &#39;nga-auth-framework-1.43&#39;, ext: &#39;aar&#39;)
+compile(name: &#39;rba-auth-interface-1.03&#39;, ext: &#39;aar&#39;)</p>
+
+<p><strong>//HYPR dependencies</strong>
+* compile(name: &#39;HyprCommon-1.2.1&#39;, ext: &#39;aar&#39;)
+* compile(name: &#39;HyprFidoClient-1.2.1&#39;, ext: &#39;aar&#39;)
+* compile(name: &#39;HyprFingerprint-1.2.2&#39;, ext: &#39;aar&#39;)
+* compile(name: &#39;HyprPin-1.2.1&#39;, ext: &#39;aar&#39;)
+* compile(name: &#39;HyprRbaFramework-1.2.5&#39;, ext: &#39;aar&#39;)
+* compile(name: &#39;HyprUiAdapter-1.2.1&#39;, ext: &#39;aar&#39;)</p>
+
+<p>There are several external dependencies which the SDK relies on which must be included in your project in order for it to work properly. We are currently working on a way to make this not necessary, but for the time being, add the following lines to your gradle dependencies block:</p>
+
+<ul>
+<li>compile &#39;com.squareup.retrofit2:retrofit:2.1.0&#39;</li>
+<li>compile &#39;com.squareup.retrofit2:converter-gson:2.1.0&#39;</li>
+<li>compile &#39;com.squareup.retrofit2:adapter-rxjava:2.1.0&#39;</li>
+<li>compile &#39;com.jakewharton:butterknife:7.0.1&#39;</li>
+<li>compile &#39;com.jakewharton.timber:timber:4.5.1&#39;</li>
+<li>compile &#39;io.reactivex:rxandroid:1.2.1&#39;</li>
+<li>compile &#39;com.squareup.okhttp3:logging-interceptor:3.3.0&#39;</li>
+<li>compile group: &#39;joda-time&#39;, name: &#39;joda-time&#39;, version: &#39;2.9.9&#39;</li>
+</ul>
 
 <blockquote>
-<p>Use this pattern to make asynchronous API call</p>
+<p>Add the following line to the defaultConfig block</p>
 </blockquote>
-<pre class="highlight java tab-java"><code><span class="n">Subject</span><span class="o">&lt;</span><span class="n">T</span><span class="o">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="n">observer</span> <span class="o">=</span> <span class="n">PublishSubject</span><span class="o">.</span><span class="na">create</span><span class="o">();</span>
-<span class="n">observer</span><span class="o">.</span><span class="na">subscribeOn</span><span class="o">(</span><span class="n">Schedulers</span><span class="o">.</span><span class="na">newThread</span><span class="o">())</span>
-<span class="o">.</span><span class="na">observeOn</span><span class="o">(</span><span class="n">AndroidSchedulers</span><span class="o">.</span><span class="na">mainThread</span><span class="o">())</span>
-<span class="o">.</span><span class="na">subscribe</span><span class="o">((</span><span class="n">T</span> <span class="n">result</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
-  <span class="c1">//call is done</span>
-<span class="o">});</span>
+<pre class="highlight java tab-java"><code><span class="n">multiDexEnabled</span> <span class="kc">true</span>
 </code></pre>
-<p>As a note, you’ll have to save a username to shared preferences with the key “NGAUser”, otherwise the getInstance method will throw a UserNotFoundException. It can be an actual username or a random string, it just can’t be empty.</p>
+<p>Because of the number of libraries used in this SDK, you need to enable multi-dexing on your application. There are a few steps involved in this. Firstly, add the following line to the defaultConfig block under the android block in your build.gradle file:</p>
 
-<p>Most of the methods which can be invoked involve making an asynchronous API call. The RxJava observer-subscriber implementation is used to handle this. For each of the asynchronous method calls, an observer is created, subscribed on, and passed into the method. Specific examples will be given in the appropriate sections, but they will all use the following pattern:</p>
-<pre class="highlight java tab-java"><code><span class="n">subscribe</span><span class="o">(</span><span class="k">new</span> <span class="n">Subscriber</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;()</span> <span class="o">{</span>
-  <span class="nd">@Override</span>
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onCompleted</span><span class="o">()</span> <span class="o">{}</span>
-
-    <span class="nd">@Override</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onError</span><span class="o">(</span><span class="n">Throwable</span> <span class="n">e</span><span class="o">)</span> <span class="o">{}</span>
-
-      <span class="nd">@Override</span>
-      <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onNext</span><span class="o">(</span><span class="n">T</span> <span class="n">result</span><span class="o">)</span> <span class="o">{</span>
-        <span class="c1">//call is done</span>
-      <span class="o">}</span>
-    <span class="o">});</span>
-</code></pre>
-<p>You may need to import the RetroLambda library to use the (T result) -&gt; {} syntax shown. If you’re not using RetroLambda, the following syntax can be used:</p>
-
-<p>In the assets folder of your project, you’ll need to add a file called configuration.properties. This contains some values which need to be configured from the app level such that the SDK can make the appropriate API calls. The fields which need to be added are as follows:</p>
+<p>In the assets folder of your project, you’ll need to add a file called configuration.properties.dev. This contains some values which need to be configured from the app level such that the SDK can make the appropriate API calls. The fields which need to be added are as follows:</p>
 <h3 id='configuration-properties'>Configuration Properties</h3>
 <table><thead>
 <tr>
@@ -319,231 +324,269 @@
 </thead><tbody>
 <tr>
 <td>BASE_API_URL</td>
-<td>https://nga.acceptto.com -- base url of the server you’re pointing to</td>
+<td><strong>https://nga.acceptto.com</strong> -- base url of the server you’re pointing to</td>
 </tr>
 <tr>
 <td>NGA_REQUESTS_TOKEN</td>
-<td>api/v1/user/mock/app_token -- token endpoint for the server</td>
+<td><strong>api/v1/user/mock/app_token</strong> -- token endpoint for the server</td>
 </tr>
 <tr>
 <td>NGA_REQUESTS_POLICY</td>
-<td>api/v1/policy -- policy endpoint for the server</td>
+<td><strong>api/v1/policy</strong> -- policy endpoint for the server</td>
 </tr>
 <tr>
 <td>NGA_REQUESTS_LOA</td>
-<td>rbaorcheng/v1/scopetoloa -- policy endpoint for the server</td>
+<td><strong>rbaorcheng/v1/scopetoloa</strong> -- policy endpoint for the server</td>
 </tr>
 <tr>
 <td>NGA_REQUESTS_ENROLL</td>
-<td>api/v1/requests/enroll -- enroll endpoint for the server</td>
+<td><strong>api/v1/requests/enroll</strong> -- enroll endpoint for the server</td>
 </tr>
 <tr>
 <td>NGA_REQUESTS_AUTHENTICATE</td>
-<td>api/v1/requests/authenticate -- auth endpoint for the server</td>
+<td><strong>api/v1/requests/authenticate</strong> -- auth endpoint for the server</td>
 </tr>
 <tr>
 <td>NGA_REQUESTS_UNENROLL</td>
-<td>api/v1/requests/unenroll -- unenroll endpoint for the server</td>
+<td><strong>api/v1/requests/unenroll</strong> -- unenroll endpoint for the server</td>
 </tr>
 <tr>
 <td>CLIENT_UID</td>
-<td>1767d8cf-ce5d-414f-b0ba-d680aeb79920 -- client uid used to retrieve access tokens</td>
+<td><strong>1767d8cf-ce5d-414f-b0ba-d680aeb79920</strong> -- client uid used to retrieve access tokens</td>
 </tr>
 <tr>
 <td>CLIENT_SECRET</td>
-<td>2tW3xQ7iM0rW6qY3wQ6tF1gW8kN1nO3rV5qL1dK2iQ0kI8sT1 -- client secret used to retrieve access tokens</td>
+<td><strong>2tW3xQ7iM0rW6qY3wQ6tF1gW8kN1nO3rV5qL1dK2iQ0kI8sT1</strong> -- client secret used to retrieve access tokens</td>
 </tr>
 <tr>
 <td>SDK_VERSION</td>
-<td>1.0 -- SDK version which is sent in all operation requests</td>
+<td><strong>1.0</strong> -- SDK version which is sent in all operation requests</td>
 </tr>
 <tr>
 <td>APIC_GRANT_TYPE</td>
-<td>client_credentials -- APIC grant type used to retrieve access tokens</td>
+<td><strong>client_credentials</strong> -- APIC grant type used to retrieve access tokens</td>
 </tr>
 <tr>
 <td>APIC_SCOPE</td>
-<td>Public%20NonPII -- APIC scope used to retrieve access tokens</td>
+<td><strong>Public%20NonPII</strong> -- APIC scope used to retrieve access tokens</td>
 </tr>
 <tr>
 <td>RBA_APP_ID</td>
-<td>com.acceptto.androidngasample -- AppId sent in all operation requests</td>
+<td><strong>com.acceptto.androidngasample</strong> -- AppId sent in all operation requests</td>
 </tr>
 <tr>
 <td>RBA_APP_VERSION</td>
-<td>1.0 -- AppVersion sent in all operation requests</td>
+<td><strong>1.0</strong> -- AppVersion sent in all operation requests</td>
+</tr>
+<tr>
+<td>BUSINESS_SUBDIVISION</td>
+<td><strong>AetnaMobile</strong></td>
 </tr>
 </tbody></table>
 
-<p>Finally, before trying to use the SDK, you will need to specify your application context. The SDK comes with an ApplicationContextProvider class which can help you achieve this:</p>
-<pre class="highlight java tab-java"><code><span class="n">ApplicationContextProvider</span><span class="o">.</span><span class="na">setContext</span><span class="o">(</span><span class="n">getApplicationContext</span><span class="o">());</span>
+<p>The NGA SDK performs several sign/verify operations during the creation of server requests, and for that reason we need to add the correct keys on the app level. The name for those keys should be the following:</p>
+
+<ul>
+<li>Nga_core_id_rsa_pub.pem (server public key)</li>
+<li>App_id_rsa_priv.pem (app private key)</li>
+</ul>
+
+<p>Keys must be added on the project for all the needed targets. Please make sure they are included in the assets folder. If you have access to one of our sample apps, you can grab the keys from there. If you get back an invalid signature error during any NGA operations, you may need to contact Acceptto for support setting up and configuring your application with NGA servers.</p>
+
+<p>With these steps out of the way, you should be able to build the application.</p>
+
+<blockquote>
+<p>Specify your application context</p>
+</blockquote>
+<pre class="highlight java tab-java"><code><span class="n">ApplicationContextProvider</span><span class="o">.</span><span class="na">setAppContext</span><span class="o">(</span><span class="n">getApplicationContext</span><span class="o">());</span>
 </code></pre>
+<p>Before trying to use the SDK, you will need to specify your application context. The SDK comes with an ApplicationContextProvider class which can help you achieve this:</p>
+
 <p>You will need to do this before invoking any of the SDK methods.</p>
-<h1 id='policy'>Policy</h1><pre class="highlight java tab-java"><code><span class="n">sAetnaNGAAuth</span><span class="o">.</span><span class="na">setTrustMode</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
+
+<blockquote>
+<p>Example of the AetnaNGAAuth Class</p>
+</blockquote>
+<pre class="highlight java tab-java"><code><span class="n">AetnaNGAAuth</span> <span class="n">sAetnaNGAAuth</span> <span class="o">=</span> <span class="n">AetnaNGAAuth</span><span class="o">.</span><span class="na">getInstance</span><span class="o">();</span>
 </code></pre>
-<p>There are a couple steps involved in making a good policy call. Firstly, depending on whether or not you plan to use trusted enroll, you’ll want to call the AetnaNGAAuth setTrustMode method, passing in either true or false:</p>
+<p>All of the SDK’s methods are invoked from the AetnaNGAAuth class. This is a static singleton class which is responsible for coordinating all the major RBA operations, keeping references to all of the authenticators available to the device, and keeping track of the state of the user with respect to the RBA flow. A reference to this class can be set with the following code:</p>
+
+<blockquote>
+<p>Use this pattern to make asynchronous API call</p>
+</blockquote>
+<pre class="highlight java tab-java"><code><span class="n">Subject</span><span class="o">&lt;</span><span class="n">T</span><span class="o">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="n">observer</span> <span class="o">=</span> <span class="n">PublishSubject</span><span class="o">.</span><span class="na">create</span><span class="o">();</span>
+<span class="n">observer</span><span class="o">.</span><span class="na">subscribeOn</span><span class="o">(</span><span class="n">Schedulers</span><span class="o">.</span><span class="na">newThread</span><span class="o">())</span>
+    <span class="o">.</span><span class="na">observeOn</span><span class="o">(</span><span class="n">AndroidSchedulers</span><span class="o">.</span><span class="na">mainThread</span><span class="o">())</span>
+    <span class="o">.</span><span class="na">subscribe</span><span class="o">((</span><span class="n">T</span> <span class="n">result</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
+        <span class="c1">//call is done</span>
+  <span class="o">});</span>
+</code></pre>
+<p>Most of the methods which can be invoked involve making an asynchronous API call. The RxJava observer-subscriber implementation is used to handle this. For each of the asynchronous method calls, an observer is created, subscribed on, and passed into the method. Specific examples will be given in the appropriate sections, but they will all use the following pattern:</p>
+
+<blockquote>
+<p>Example of asynchronous API call</p>
+</blockquote>
+<pre class="highlight java tab-java"><code><span class="n">subscribe</span><span class="o">(</span><span class="k">new</span> <span class="n">Subscriber</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;()</span> <span class="o">{</span>
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onCompleted</span><span class="o">()</span> <span class="o">{}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onError</span><span class="o">(</span><span class="n">Throwable</span> <span class="n">e</span><span class="o">)</span> <span class="o">{}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onNext</span><span class="o">(</span><span class="n">T</span> <span class="n">result</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">//call is done</span>
+  <span class="o">}</span>
+<span class="o">});</span>
+</code></pre>
+<p>You may need to import the RetroLambda library to use the (T result) -&gt; {} syntax shown. If you’re not using RetroLambda, the following syntax can be used:</p>
+
+<blockquote>
+<p>Enable trusted enroll</p>
+</blockquote>
+<pre class="highlight java tab-java"><code><span class="n">sAetnaNGAAuth</span><span class="o">.</span><span class="na">setTrustMode</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
+</code></pre>
+<p>Finally, depending on whether or not you plan to use trusted enroll, you’ll want to call the AetnaNGAAuth setTrustMode method, passing in either true or false (false is recommended by default):</p>
+<h2 id='policy'>Policy</h2>
+<blockquote>
+<p>Set up and subscribe to your observer</p>
+</blockquote>
 <pre class="highlight java tab-java"><code><span class="n">Subject</span><span class="o">&lt;</span><span class="n">RBAEnrollState</span><span class="o">,</span> <span class="n">RBAEnrollState</span><span class="o">&gt;</span> <span class="n">stateObserver</span> <span class="o">=</span> <span class="n">PublishSubject</span><span class="o">.</span><span class="na">create</span><span class="o">();</span>
 <span class="n">stateObserver</span><span class="o">.</span><span class="na">subscribeOn</span><span class="o">(</span><span class="n">Schedulers</span><span class="o">.</span><span class="na">newThread</span><span class="o">())</span>
     <span class="o">.</span><span class="na">observeOn</span><span class="o">(</span><span class="n">AndroidSchedulers</span><span class="o">.</span><span class="na">mainThread</span><span class="o">())</span>
     <span class="o">.</span><span class="na">subscribe</span><span class="o">((</span><span class="n">RBAEnrollState</span> <span class="n">isRBAEnrolled</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
         <span class="k">if</span><span class="o">(</span><span class="n">isRBAEnrolled</span> <span class="o">==</span> <span class="n">RBAEnrollState</span><span class="o">.</span><span class="na">FINAL</span><span class="o">)</span> <span class="o">{</span>
-            <span class="c1">//user is enrolled</span>
-<span class="o">}</span> <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">isRBAEnrolled</span> <span class="o">==</span> <span class="n">RBAEnrollState</span><span class="o">.</span><span class="na">TRANSIENT</span><span class="o">)</span> <span class="o">{</span>
-    <span class="c1">//user is not enrolled</span>
-<span class="o">}</span>
-<span class="o">});</span>
+               <span class="c1">//user is enrolled</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">isRBAEnrolled</span> <span class="o">==</span> <span class="n">RBAEnrollState</span><span class="o">.</span><span class="na">TRANSIENT</span><span class="o">)</span> <span class="o">{</span>
+           <span class="c1">//user is not enrolled</span>
+    <span class="o">}</span>
+  <span class="o">});</span>
 </code></pre>
-<p>After that you’ll need to set up and subscribe on your observer, which will return an RBAEnrollState object once it’s finished making the call:</p>
+<p>To make a good policy call, you’ll need to set up and subscribe on your observer, which will return an RBAEnrollState object once it’s finished making the call:</p>
+
+<blockquote>
+<p>Invoke the isNGAEnrolledWithCompletion method</p>
+</blockquote>
 <pre class="highlight java tab-java"><code><span class="n">sAetnaNGAAuth</span><span class="o">.</span><span class="na">isNGAEnrolledWithCompletion</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">stateObserver</span><span class="o">);</span>
 </code></pre>
-<p>Finally, invoke the isNGAEnrolledWithCompletion method on AetnaNGAAuth, passing in the calling activity context and your observer:</p>
-<h1 id='enroll'>Enroll</h1>
+<p>Next, just invoke the isNGAEnrolledWithCompletion method on AetnaNGAAuth, passing in the calling activity context and your observer:</p>
+<h2 id='enroll'>Enroll</h2>
 <p>There are two ways to handle the enrollment operation in the SDK. First, NGA provides an automated flow which guides the user through the process of setting up new authentication methods. It invokes a series of activities, in order to explain to the user what NGA is and how to use it. All the text and coloring on these activities is configurable, which is documented in the Configuration section. It should be noted that if using this method of enrollment, the current setup is such that enabling PIN authentication is mandatory, while Fingerprint is optional. It is also possible to handle the enrollment process manually, which provides more flexibility on which authenticators to allow the user to enroll with. This way of enrolling also introduces more pitfalls however, all of which will be covered in this spec.</p>
-<h2 id='automated-enrollment'>Automated Enrollment</h2><pre class="highlight java tab-java"><code><span class="n">sAetnaNGAAuth</span><span class="o">.</span><span class="na">startEnrollFlow</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="mi">9001</span><span class="o">);</span>
+<h3 id='automated-enrollment'>Automated Enrollment</h3>
+<blockquote>
+<p>Start enrollment process</p>
+</blockquote>
+<pre class="highlight java tab-java"><code><span class="n">sAetnaNGAAuth</span><span class="o">.</span><span class="na">startEnrollFlow</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="mi">9001</span><span class="o">);</span>
 </code></pre>
 <p>Unlike the other operations, NGA automated enrollment invokes a series of activities in order to walk the user through the enrollment process, as opposed to simply running some logic in the background. Because of this, rather than using observers to listen for the result of the operation, enroll relies on the onActivityResult lifecycle method. Once the user either completes or errors/cancels out of the enroll process, the SDK activities finish with a result code indicating whether or not the operation was successful.</p>
 
 <p>To start the enrollment process, the SDK uses the built in method startEnrollFlow. It’s given a context and a request code to be used on onActivityResult:</p>
+
+<blockquote>
+<p>Request code used to invoke activity</p>
+</blockquote>
 <pre class="highlight java tab-java"><code><span class="nd">@Override</span>
 <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onActivityResult</span><span class="o">(</span><span class="kt">int</span> <span class="n">requestCode</span><span class="o">,</span> <span class="kt">int</span> <span class="n">resultCode</span><span class="o">,</span> <span class="n">Intent</span> <span class="n">data</span><span class="o">)</span> <span class="o">{</span>
-    <span class="k">if</span><span class="o">(</span><span class="n">requestCode</span> <span class="o">==</span> <span class="mi">9001</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">if</span><span class="o">(</span><span class="n">resultCode</span> <span class="o">==</span> <span class="n">Activity</span><span class="o">.</span><span class="na">RESULT_OK</span><span class="o">)</span> <span class="o">{</span>
-            <span class="c1">//enroll was successful</span>
-<span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-    <span class="c1">//enroll was not successful</span>
-<span class="o">}</span>
-<span class="o">}</span>
+  <span class="k">if</span><span class="o">(</span><span class="n">requestCode</span> <span class="o">==</span> <span class="mi">9001</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">resultCode</span> <span class="o">==</span> <span class="n">Activity</span><span class="o">.</span><span class="na">RESULT_OK</span><span class="o">)</span> <span class="o">{</span>
+             <span class="c1">//enroll was successful</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+         <span class="c1">//enroll was not successful</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
 <span class="o">}</span>
 </code></pre>
 <p>The first parameter needs to be the Activity which invokes enroll in the first place. The second parameter is a request code which the SDK will use when invoking its own activities. This request code has to be the same one used on your onActivityResult method. Here’s an example of how to implement this:</p>
 
 <p>The important pieces here are the request code and result code. The request code needs to match what you passed into the startEnrollFlow method. You also need to make sure you’re filtering it, otherwise you may see some unexpected behavior from some of the authenticators. The result code is set by the SDK to the value of Activity.RESULT_OK if enroll finishes successfully, so you’ll want to filter there as well.</p>
-<h2 id='manual-enrollment'>Manual Enrollment</h2><pre class="highlight java tab-java"><code><span class="n">RBAAuthenticationType</span> <span class="n">deviceRisk</span> <span class="o">=</span> <span class="n">NGAUtil</span><span class="o">.</span><span class="na">getRBATypeFromFriendlyName</span><span class="o">(</span><span class="n">NGAConstants</span><span class="o">.</span><span class="na">ACCEPTTO_DEVICE_RISK</span><span class="o">);</span>
+<h3 id='manual-enrollment'>Manual Enrollment</h3>
+<blockquote>
+<p>Code to invoke SDK&#39;s enrollment operation manually</p>
+</blockquote>
+<pre class="highlight java tab-java"><code><span class="n">RBAAuthenticationType</span> <span class="n">deviceRisk</span> <span class="o">=</span> <span class="n">NGAUtil</span><span class="o">.</span><span class="na">getRBATypeFromFriendlyName</span><span class="o">(</span><span class="n">NGAConstants</span><span class="o">.</span><span class="na">ACCEPTTO_DEVICE_RISK</span><span class="o">);</span>
 <span class="n">Subject</span><span class="o">&lt;</span><span class="n">RBAEnrollState</span><span class="o">,</span> <span class="n">RBAEnrollState</span><span class="o">&gt;</span> <span class="n">deviceRiskObserver</span> <span class="o">=</span> <span class="n">PublishSubject</span><span class="o">.</span><span class="na">create</span><span class="o">();</span>
-        <span class="n">deviceRiskObserver</span><span class="o">.</span><span class="na">subscribeOn</span><span class="o">(</span><span class="n">Schedulers</span><span class="o">.</span><span class="na">newThread</span><span class="o">())</span>
-                <span class="o">.</span><span class="na">observeOn</span><span class="o">(</span><span class="n">AndroidSchedulers</span><span class="o">.</span><span class="na">mainThread</span><span class="o">())</span>
-                <span class="o">.</span><span class="na">subscribe</span><span class="o">((</span><span class="n">RBAEnrollState</span> <span class="n">deviceEnrollState</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
-                    <span class="k">if</span><span class="o">(</span><span class="n">deviceEnrollState</span> <span class="o">==</span> <span class="n">RBAEnrollState</span><span class="o">.</span><span class="na">FINAL</span><span class="o">)</span> <span class="o">{</span>
-
+  <span class="n">deviceRiskObserver</span><span class="o">.</span><span class="na">subscribeOn</span><span class="o">(</span><span class="n">Schedulers</span><span class="o">.</span><span class="na">newThread</span><span class="o">())</span>
+    <span class="o">.</span><span class="na">observeOn</span><span class="o">(</span><span class="n">AndroidSchedulers</span><span class="o">.</span><span class="na">mainThread</span><span class="o">())</span>
+    <span class="o">.</span><span class="na">subscribe</span><span class="o">((</span><span class="n">RBAEnrollState</span> <span class="n">deviceEnrollState</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
+      <span class="k">if</span><span class="o">(</span><span class="n">deviceEnrollState</span> <span class="o">==</span> <span class="n">RBAEnrollState</span><span class="o">.</span><span class="na">FINAL</span><span class="o">)</span> <span class="o">{</span>
 
                        <span class="c1">//Enrollment successful</span>
-                    <span class="o">}</span> <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">deviceEnrollState</span> <span class="o">==</span> <span class="n">RBAEnrollState</span><span class="o">.</span><span class="na">ERROR</span><span class="o">)</span> <span class="o">{</span>
+      <span class="o">}</span> <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">deviceEnrollState</span> <span class="o">==</span> <span class="n">RBAEnrollState</span><span class="o">.</span><span class="na">ERROR</span><span class="o">)</span> <span class="o">{</span>
                        <span class="c1">//Enrollment errored</span>
-                    <span class="o">}</span> <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">deviceEnrollState</span> <span class="o">==</span> <span class="n">RBAEnrollState</span><span class="o">.</span><span class="na">CANCEL</span><span class="o">)</span> <span class="o">{</span>
+      <span class="o">}</span> <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">deviceEnrollState</span> <span class="o">==</span> <span class="n">RBAEnrollState</span><span class="o">.</span><span class="na">CANCEL</span><span class="o">)</span> <span class="o">{</span>
                        <span class="c1">//Enrollment canceled</span>
-                    <span class="o">}</span>
-                <span class="o">},</span> <span class="nl">Timber:</span><span class="o">:</span><span class="n">e</span><span class="o">);</span>
-        <span class="n">sAetnaNGAAuth</span><span class="o">.</span><span class="na">enrollNGAWithCompletion</span><span class="o">(</span><span class="n">mActivity</span><span class="o">,</span> <span class="n">deviceRisk</span><span class="o">,</span> <span class="n">deviceRiskObserver</span><span class="o">);</span>
+      <span class="o">}</span>
+    <span class="o">},</span> <span class="nl">Timber:</span><span class="o">:</span><span class="n">e</span><span class="o">);</span>
+    <span class="n">sAetnaNGAAuth</span><span class="o">.</span><span class="na">enrollNGAWithCompletion</span><span class="o">(</span><span class="n">mActivity</span><span class="o">,</span> <span class="n">deviceRisk</span><span class="o">,</span> <span class="n">deviceRiskObserver</span><span class="o">);</span>
 </code></pre>
 <p>If you’d like to display your own screens or dictate the rules of enrollment yourself, it is possible to invoke the SDK’s enrollment operation manually. This is done by using observers, similar to the other operations:</p>
 
 <aside class="warning">
 It should be noted that if you are using manual enrollment, there are two practices which, if not followed properly, could lead to unexpected behavior in your application.
-</aside>
 
-<p>Firstly, you must enroll device risk before enrolling any other authenticators. If you skip this step, policy will return incorrect response codes in future operations. Secondly, you should be sure the authenticator you are trying to enroll with is supported on the device. The static method findOpFromName, belonging to the AetnaNGAAuth class will return the correct NGAOperation instance if the authenticator is supported and null if not, and as such it should be called before attempting to enroll your authenticator.</p>
-<h1 id='authenticate'>Authenticate</h1><pre class="highlight java tab-java"><code><span class="n">Subject</span><span class="o">&lt;</span><span class="n">RBAAuthenticationState</span><span class="o">,</span> <span class="n">RBAAuthenticationState</span><span class="o">&gt;</span> <span class="n">stateObserver</span> <span class="o">=</span> <span class="n">PublishSubject</span><span class="o">.</span><span class="na">create</span><span class="o">();</span>
+Firstly, you must enroll device risk before enrolling any other authenticators. If you skip this step, policy will return incorrect response codes in future operations. Secondly, you should be sure the authenticator you are trying to enroll with is supported on the device. The static method findOpFromName, belonging to the AetnaNGAAuth class will return the correct NGAOperation instance if the authenticator is supported and null if not, and as such it should be called before attempting to enroll your authenticator.
+</aside>
+<h2 id='authenticate'>Authenticate</h2>
+<blockquote>
+<p>Example of code to authenticate</p>
+</blockquote>
+<pre class="highlight java tab-java"><code><span class="n">Subject</span><span class="o">&lt;</span><span class="n">RBAAuthenticationState</span><span class="o">,</span> <span class="n">RBAAuthenticationState</span><span class="o">&gt;</span> <span class="n">stateObserver</span> <span class="o">=</span> <span class="n">PublishSubject</span><span class="o">.</span><span class="na">create</span><span class="o">();</span>
 <span class="n">stateObserver</span><span class="o">.</span><span class="na">subscribeOn</span><span class="o">(</span><span class="n">Schedulers</span><span class="o">.</span><span class="na">newThread</span><span class="o">())</span>
     <span class="o">.</span><span class="na">observerOn</span><span class="o">(</span><span class="n">AndroidSchedulers</span><span class="o">.</span><span class="na">mainThread</span><span class="o">())</span>
     <span class="o">.</span><span class="na">subscribe</span><span class="o">((</span><span class="n">RBAAuthenticationState</span> <span class="n">rbaAuthenticationState</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
-        <span class="k">if</span><span class="o">(</span><span class="n">rbaAuthenticationState</span> <span class="o">==</span> <span class="n">RBAAuthenticationState</span><span class="o">.</span><span class="na">FINAL</span><span class="o">)</span> <span class="o">{</span>
-    <span class="c1">//auth successful</span>
-<span class="o">}</span> <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">rbaAuthenticationState</span> <span class="o">==</span> <span class="n">RBAAuthenticationState</span><span class="o">.</span><span class="na">CANCEL</span><span class="o">)</span> <span class="o">{</span>
-    <span class="c1">//user canceled auth flow</span>
-<span class="o">}</span> <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">rbaAuthenticationState</span> <span class="o">==</span> <span class="n">RBAAuthenticationState</span><span class="o">.</span><span class="na">ERROR</span><span class="o">)</span> <span class="o">{</span>
-    <span class="c1">//auth flow error</span>
-<span class="o">}</span>
-<span class="o">});</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">rbaAuthenticationState</span> <span class="o">==</span> <span class="n">RBAAuthenticationState</span><span class="o">.</span><span class="na">FINAL</span><span class="o">)</span> <span class="o">{</span>
+         <span class="c1">//auth successful</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">rbaAuthenticationState</span> <span class="o">==</span> <span class="n">RBAAuthenticationState</span><span class="o">.</span><span class="na">CANCEL</span><span class="o">)</span> <span class="o">{</span>
+         <span class="c1">//user canceled auth flow</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">rbaAuthenticationState</span> <span class="o">==</span> <span class="n">RBAAuthenticationState</span><span class="o">.</span><span class="na">ERROR</span><span class="o">)</span> <span class="o">{</span>
+         <span class="c1">//auth flow error</span>
+    <span class="o">}</span>
+  <span class="o">});</span>
 </code></pre>
 <p>Both authenticate and unenroll work very similarly to policy, each with just a few minor tweaks. For authenticate specifically, there are only two differences from policy; first is the value which is being returned in the subscriber’s onNext method. This is best shown with a code sample:</p>
+
+<blockquote>
+<p>Argument representing the LOA</p>
+</blockquote>
 <pre class="highlight java tab-java"><code><span class="n">sAetnaNGAAuth</span><span class="o">.</span><span class="na">authenticateNGA</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="n">stateObserver</span><span class="o">);</span>
 </code></pre>
 <p>The authenticate flow can either succeed, fail, or be canceled by the user, and will return an appropriate result code to allow for the app to handle each case. When invoking the authenticate method, in addition to the state observer and activity context, an argument representing the LOA must be passed in. At the time of writing, this value is always 2:</p>
+
+<blockquote>
+<p>Method to successfully complete the authentication</p>
+</blockquote>
 <pre class="highlight java tab-java"><code><span class="nd">@Override</span>
 <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onActivityResult</span><span class="o">(</span><span class="kt">int</span> <span class="n">requestCode</span><span class="o">,</span> <span class="kt">int</span> <span class="n">resultCode</span><span class="o">,</span> <span class="n">Intent</span> <span class="n">data</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">sAetnaNGAAuth</span><span class="o">.</span><span class="na">getCurrentOp</span><span class="o">().</span><span class="na">passIntentData</span><span class="o">(</span><span class="n">requestCode</span><span class="o">,</span> <span class="n">resultCode</span><span class="o">,</span>
-<span class="n">data</span><span class="o">,</span> <span class="k">this</span><span class="o">);</span>
+    <span class="n">sAetnaNGAAuth</span><span class="o">.</span><span class="na">getCurrentOp</span><span class="o">().</span><span class="na">passIntentData</span><span class="o">(</span><span class="n">requestCode</span><span class="o">,</span> <span class="n">resultCode</span><span class="o">,</span> <span class="n">data</span><span class="o">,</span> <span class="k">this</span><span class="o">);</span>
 <span class="o">}</span>
 </code></pre>
 <p>Finally, any FIDO certified authenticators (and possibly others in the future) will need to use the onActivityResult method to successfully complete the authentication flow. This can be achieved by making the following method call:</p>
 
 <p>You’ll want to be sure to put this in a branch such that it will not be triggered during the enroll flow. The request codes of the various authenticators will likely change over the course of time, and hence are out of the scope of this document. However, placing this line of code in an else statement should work just fine.</p>
-<h1 id='unenroll'>Unenroll</h1><pre class="highlight java tab-java"><code><span class="n">Subject</span><span class="o">&lt;</span><span class="n">RBAUnEnrollState</span><span class="o">,</span> <span class="n">RBAUnEnrollState</span><span class="o">&gt;</span> <span class="n">stateObserver</span> <span class="o">=</span> <span class="n">PublishSubject</span><span class="o">.</span><span class="na">create</span><span class="o">();</span>
+<h2 id='unenroll'>Unenroll</h2>
+<blockquote>
+<p>Unenroll code example</p>
+</blockquote>
+<pre class="highlight java tab-java"><code><span class="n">Subject</span><span class="o">&lt;</span><span class="n">RBAUnEnrollState</span><span class="o">,</span> <span class="n">RBAUnEnrollState</span><span class="o">&gt;</span> <span class="n">stateObserver</span> <span class="o">=</span> <span class="n">PublishSubject</span><span class="o">.</span><span class="na">create</span><span class="o">();</span>
 <span class="n">stateObserver</span><span class="o">.</span><span class="na">subscribeOn</span><span class="o">(</span><span class="n">Schedulers</span><span class="o">.</span><span class="na">newThread</span><span class="o">())</span>
     <span class="o">.</span><span class="na">observeOn</span><span class="o">(</span><span class="n">AndroidSchedulers</span><span class="o">.</span><span class="na">mainThread</span><span class="o">())</span>
     <span class="o">.</span><span class="na">subscribe</span><span class="o">((</span><span class="n">RBAUnEnrollState</span> <span class="n">rbaUnenrollState</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
         <span class="k">if</span><span class="o">(</span><span class="n">rbaUnenrollState</span> <span class="o">==</span> <span class="n">RBAUnEnrollState</span><span class="o">.</span><span class="na">FINAL</span><span class="o">)</span> <span class="o">{</span>
-            <span class="c1">//unenroll successful</span>
-<span class="o">}</span> <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">rbaUnenrollState</span> <span class="o">==</span> <span class="n">RBAUnEnrollState</span><span class="o">.</span><span class="na">ERROR</span><span class="o">)</span> <span class="o">{</span>
-    <span class="c1">//unenroll failed</span>
-<span class="o">}</span>
+              <span class="c1">//unenroll successful</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">rbaUnenrollState</span> <span class="o">==</span> <span class="n">RBAUnEnrollState</span><span class="o">.</span><span class="na">ERROR</span><span class="o">)</span> <span class="o">{</span>
+         <span class="c1">//unenroll failed</span>
+  <span class="o">}</span>
 <span class="o">});</span>
 <span class="n">sAetnaNGAAuth</span><span class="o">.</span><span class="na">unenrollNGAWithCompletion</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">stateObserver</span><span class="o">);</span>
 </code></pre>
 <p>The unenroll flow is pretty much the same as authenticate. The only differences are that it uses RBAUnEnrollState to indicate whether the flow was successful or not, there is no cancel state, and no LOA parameter is required to invoke the method. A proper implementation is as follows:</p>
 
 <p>Some authenticators also use onActivityResult for the unenroll flow, but the implementation is exactly the same as was described in the authenticate section (4). As long as you have that same code it should work just fine.</p>
-<h1 id='certificates'>Certificates</h1>
+<h2 id='certificates'>Certificates</h2>
 <p>RBAAuthSDK performs several sign/verify operations during the creation of server requests, and for that reason we need to add the correct keys on the app level. The name for those keys should be the following:
 * Nga_core_id_rsa_pub.pem (server public key)
 * App_id_rsa_priv.pem (app private key)
 Keys must be added on the project for all the needed targets. Please make sure they are included in the assets folder.</p>
-<h1 id='errors'>Errors</h1>
-<aside class="notice">This error section is stored in a separate file in `includes/_errors.md`. Slate allows you to optionally separate out your docs into many files...just save them to the `includes` folder and add them to the top of your `index.md`'s frontmatter. Files are included in the order listed.</aside>
-
-<p>The Kittn API uses the following error codes:</p>
-
-<table><thead>
-<tr>
-<th>Error Code</th>
-<th>Meaning</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>400</td>
-<td>Bad Request -- Your request sucks.</td>
-</tr>
-<tr>
-<td>401</td>
-<td>Unauthorized -- Your API key is wrong.</td>
-</tr>
-<tr>
-<td>403</td>
-<td>Forbidden -- The kitten requested is hidden for administrators only.</td>
-</tr>
-<tr>
-<td>404</td>
-<td>Not Found -- The specified kitten could not be found.</td>
-</tr>
-<tr>
-<td>405</td>
-<td>Method Not Allowed -- You tried to access a kitten with an invalid method.</td>
-</tr>
-<tr>
-<td>406</td>
-<td>Not Acceptable -- You requested a format that isn&#39;t json.</td>
-</tr>
-<tr>
-<td>410</td>
-<td>Gone -- The kitten requested has been removed from our servers.</td>
-</tr>
-<tr>
-<td>418</td>
-<td>I&#39;m a teapot.</td>
-</tr>
-<tr>
-<td>429</td>
-<td>Too Many Requests -- You&#39;re requesting too many kittens! Slow down!</td>
-</tr>
-<tr>
-<td>500</td>
-<td>Internal Server Error -- We had a problem with our server. Try again later.</td>
-</tr>
-<tr>
-<td>503</td>
-<td>Service Unavailable -- We&#39;re temporarily offline for maintenance. Please try again later.</td>
-</tr>
-</tbody></table>
 
       </div>
       <div class="dark-box">
